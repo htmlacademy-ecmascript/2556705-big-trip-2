@@ -9,7 +9,7 @@ const siteFilterElement = document.querySelector('.trip-controls__filters');
 
 const boardPresenter = new BoardPresenter({boardContainer: siteMainEventsElement});
 
-render(new HeaderInfoView(), headerInfoElement);
+render(new HeaderInfoView(), headerInfoElement, 'afterbegin');
 render(new FilterView(), siteFilterElement);
 
 boardPresenter.init();
