@@ -12,7 +12,6 @@ export default class BoardPresenter {
     this.boardContainer = boardContainer;
   }
 
-  
   init() {
     render(new SortView(), this.boardContainer);
     render(this.eventListComponent, this.boardContainer);
