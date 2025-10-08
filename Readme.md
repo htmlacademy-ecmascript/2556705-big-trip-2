@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
-* Студент: [Ваня Кириллов](https://up.htmlacademy.ru/ecmascript-individual/2/user/2556705).
-* Наставник: `Неизвестно`.
+* Студент: [Иван Кириллов](https://up.htmlacademy.ru/ecmascript-individual/2/user/2556705).
+* Наставник: [Иван Цыганов](https://htmlacademy.ru/profile/id888389).
 
 ---
 
