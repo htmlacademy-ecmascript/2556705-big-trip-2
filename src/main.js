@@ -13,3 +13,4 @@ render(new HeaderInfoView(), headerInfoElement, 'afterbegin');
 render(new FilterView(), siteFilterElement);
 
 boardPresenter.init();
+

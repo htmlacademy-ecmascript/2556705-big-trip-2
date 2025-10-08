@@ -7,7 +7,6 @@ import {render} from '../render.js';
 export default class BoardPresenter {
   eventListComponent = new EventListView();
   eventEditComponent = new EventEditView();
-  eventPointComponent = new EventPointView();
 
   constructor({boardContainer}) {
     this.boardContainer = boardContainer;
@@ -18,7 +17,7 @@ export default class BoardPresenter {
     render(this.eventListComponent, this.boardContainer);
     render(this.eventEditComponent, this.eventListComponent.getElement());
     for (let i = 0; i < 3; i++) {
-      render(this.eventPointComponent, this.eventListComponent.getElement());
+      render(new EventPointView(), this.eventListComponent.getElement());
     }
   }
 }
