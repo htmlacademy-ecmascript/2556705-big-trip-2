@@ -1,6 +1,17 @@
 // Вставлять в .trip-events__list
 import {createElement} from '../render.js';
-function createEventEditTemplate() {
+import {formDate} from '../util/util.js';
+const upFirstLetter = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
+const formatOfferTitle = (title) => title.split(' ').join('_');
+
+function createEventEditTemplate(point, destinations, offers) {
+  const typeOffers = offers.find((off) => off.type === point.type).offers;
+  const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
+  const pointDestination = destinations.find((dest) => dest.id === point.destination);
+  const {dateFrom, dateTo, basePrice, type} = point;
+  const {name, description, pictures} = pointDestination || {};
+  const pointId = point.id || 0;
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
