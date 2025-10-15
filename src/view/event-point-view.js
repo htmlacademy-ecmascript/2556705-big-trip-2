@@ -58,7 +58,7 @@ export default class EventPointView {
   }
 
   getTemplate() {
-    return createEventPointTemplate();
+    return createEventPointTemplate(this.point, this.destinations, this.offers);
   }
 
   getElement() {
