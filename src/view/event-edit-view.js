@@ -1,7 +1,7 @@
 // Вставлять в .trip-events__list
 import {createElement} from '../render.js';
-import { POINT_TYPES } from '../const.js';
-import {formDate} from '../util/util.js';
+import { DATE_FORMAT, POINT_TYPES } from '../const.js';
+import {humanizeTaskDueDate} from '../util/util.js';
 const upFirstLetter = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
 const formatOfferTitle = (title) => title.split(' ').join('_');
 
@@ -10,7 +10,7 @@ function createEventEditTemplate(point, destinations, offers) {
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
   const pointDestination = destinations.find((dest) => dest.id === point.destination);
   const {dateFrom, dateTo, basePrice, type} = point;
-  const {name, description, pictures} = pointDestination || {};
+  const {name} = pointDestination || {};
   const pointId = point.id || 0;
 
   return (
@@ -50,10 +50,10 @@ function createEventEditTemplate(point, destinations, offers) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${pointId}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${pointId}" type="text" name="event-start-time" value="${formDate(dateFrom, 'complex')}">
+            <input class="event__input  event__input--time" id="event-start-time-${pointId}" type="text" name="event-start-time" value="${humanizeTaskDueDate(dateFrom, DATE_FORMAT['full-date'])}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${pointId}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${formDate(dateFrom, 'complex')}">
+            <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${humanizeTaskDueDate(dateTo, DATE_FORMAT['full-date'])}">
           </div>
 
           <div class="event__field-group  event__field-group--price">

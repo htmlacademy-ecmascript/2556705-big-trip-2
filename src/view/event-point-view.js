@@ -1,24 +1,26 @@
 // Вставлять в .trip-events__list
 import {createElement} from '../render.js';
-import {formDate, getDuration} from '../util/util.js';
+import {humanizeTaskDueDate, getDuration} from '../util/util.js';
+import {DATE_FORMAT} from '../const.js';
 const createEventPointTemplate = (point, destinations, offers) => {
   const {basePrice, isFavorite, dateFrom, dateTo, type} = point;
   const typeOffers = offers.find((off) => off.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
   const pointDestination = destinations.find((dest) => dest.id === point.destination);
+  // humanizeTaskDueDate(dateFrom, DATE_FORMAT['hours-minutes'])
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime=${formDate(dateFrom, 'full-date')}>${formDate(dateFrom, 'custom')}</time>
+        <time class="event__date" datetime=${humanizeTaskDueDate(dateFrom, DATE_FORMAT['classic-date'])}>${humanizeTaskDueDate(dateFrom, DATE_FORMAT['number-month'])}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${pointDestination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${formDate(dateFrom, 'date-time')}>${formDate(dateFrom, 'time')}</time>
+            <time class="event__start-time" datetime="${humanizeTaskDueDate(dateFrom, DATE_FORMAT['classic-date'])}T${humanizeTaskDueDate(dateFrom, DATE_FORMAT['hours-minutes'])}">${humanizeTaskDueDate(dateFrom, DATE_FORMAT['hours-minutes'])}</time>
             &mdash;
-            <time class="event__end-time" datetime=${formDate(dateTo, 'date-time')}>${formDate(dateTo, 'time')}</time>
+            <time class="event__end-time" datetime="${humanizeTaskDueDate(dateTo, DATE_FORMAT['classic-date'])}T${humanizeTaskDueDate(dateTo, DATE_FORMAT['hours-minutes'])}">${humanizeTaskDueDate(dateTo, DATE_FORMAT['hours-minutes'])}</time>
           </p>
           <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
         </div>

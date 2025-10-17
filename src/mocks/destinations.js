@@ -1,4 +1,4 @@
-const destionations = [
+const destinations = [
   {
     id: 'destination-id-1',
     description: 'Moscow, is the capital of Russia',
@@ -29,4 +29,4 @@ const destionations = [
   },
 ];
 
-export {destionations};
+export {destinations};
