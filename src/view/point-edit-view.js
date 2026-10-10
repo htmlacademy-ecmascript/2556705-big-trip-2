@@ -2,6 +2,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { DATE_FORMAT, POINT_TYPES } from '../const.js';
 import { humanizeTaskDueDate} from '../utils/utils.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const upFirstLetter = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
 const formatOfferTitle = (title) => title.split(' ').join('_');
