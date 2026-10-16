@@ -45,9 +45,9 @@ export const TEXT_NO_POINTS = {
 };
 
 export const UserAction = {
-  UPDATE_TASK: 'UPDATE_POINT',
-  ADD_TASK: 'ADD_POINT',
-  DELETE_TASK: 'DELETE_POINT',
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
 };
 
 export const UpdateType = {
