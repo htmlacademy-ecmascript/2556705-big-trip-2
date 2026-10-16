@@ -27,10 +27,6 @@ function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-function updateItem(items, update) {
-  return items.map((item) => item.newId === update.newId ? update : item);
-}
-
 function sortPointDay(pointA, pointB) {
   return dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 }
@@ -41,5 +37,5 @@ function isOffersInPoint (point, offers) {
   return pointOffers !== null;
 }
 
-export {humanizeTaskDueDate, getDuration, getRandomArrayElement, updateItem, sortPointDay, isOffersInPoint};
+export {humanizeTaskDueDate, getDuration, getRandomArrayElement, sortPointDay, isOffersInPoint};
 

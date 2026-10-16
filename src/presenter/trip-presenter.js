@@ -19,6 +19,7 @@ export default class TripPresenter {
   constructor({ tripContainer, pointsModel }) {
     this.#tripContainer = tripContainer;
     this.#pointsModel = pointsModel;
+    this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -32,16 +33,24 @@ export default class TripPresenter {
 
   init() {
     this.#renderTrip();
-    /* т.к. filterView был перенесен в main.js, то реализация отрисовки текста при отсутствии точек маршрута невозможна на данный
-    if (filteredPoints.length === 0) {
-      render(new NoPointView(filterView.noPointsText), this.#eventListComponent.element);
-      return;
-    }*/
   }
 
-  #handlePointChange = (updatedPoint) => {
-    // Здесь будем вызывать обновление модели
-    this.#pointPresenters.get(updatedPoint.newId).init(updatedPoint);
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleViewAction = (actionType, updateType, update) => {
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -54,13 +63,17 @@ export default class TripPresenter {
     this.#renderPointsList();
   };
 
-  #handleModeChange = () => {
-    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  #handlePointChange = (updatedPoint) => {
+    // Здесь будем вызывать обновление модели
+    this.#pointPresenters.get(updatedPoint.newId).init(updatedPoint);
   };
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
-      pointsListContainer: this.#pointsListComponent.element, pointsModel: this.#pointsModel, onDataChange: this.#handlePointChange, onModeChange: this.#handleModeChange
+      pointsListContainer: this.#pointsListComponent.element,
+      pointsModel: this.#pointsModel,
+      onDataChange: this.#handleViewAction,
+      onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.newId, pointPresenter);

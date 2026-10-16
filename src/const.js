@@ -43,3 +43,15 @@ export const TEXT_NO_POINTS = {
   present: 'There are no past present now',
   future: 'There are no future event now',
 };
+
+export const UserAction = {
+  UPDATE_TASK: 'UPDATE_POINT',
+  ADD_TASK: 'ADD_POINT',
+  DELETE_TASK: 'DELETE_POINT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
