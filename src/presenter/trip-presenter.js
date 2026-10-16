@@ -27,6 +27,10 @@ export default class TripPresenter {
     this.#offers = this.#pointsModel.offers;
   }
 
+  get points() {
+    return this.#pointsModel.points;
+  }
+
   init() {
     this.#tripPoints = [...this.#pointsModel.points];
     // 1. В отличии от сортировки по любому параметру,
