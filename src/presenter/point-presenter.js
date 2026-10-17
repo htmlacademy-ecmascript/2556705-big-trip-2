@@ -40,7 +40,7 @@ export default class PointPresenter {
     );
 
     this.#pointEditComponent = new PointEditView(
-      this.#point, this.#destinations, this.#offers, this.#handleFormSubmit
+      this.#point, this.#destinations, this.#offers, this.#handleFormSubmit, this.#handleFormClose
     );
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -89,6 +89,11 @@ export default class PointPresenter {
       this.#replaceFormToCard();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
+  };
+
+  #handleFormClose = () => {
+    this.#pointEditComponent.reset(this.#point);
+    this.#replaceFormToCard();
   };
 
   #replaceCardToForm() {

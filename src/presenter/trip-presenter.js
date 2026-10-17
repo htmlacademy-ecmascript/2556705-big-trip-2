@@ -1,6 +1,6 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { render, RenderPosition, remove } from '../framework/render.js';
 import { sortPointDay } from '../utils/utils.js';
-import {SortType, UpdateType, UserAction} from '../const.js';
+import { SortType, UpdateType, UserAction } from '../const.js';
 import SortView from '../view/sort-view.js';
 import PointsListView from '../view/points-list-view.js';
 import PointPresenter from './point-presenter.js';
@@ -11,10 +11,10 @@ import NoPointView from '../view/no-points-view.js';
 export default class TripPresenter {
   #tripContainer;
   #pointsModel;
-  #sortView = null;
+  #sortComponent = null;
   #pointsListComponent = new PointsListView();
   #pointPresenters = new Map();
-  #currentSortType = SortType.DEFAULT;
+  #currentSortType = SortType.DAY;
 
   constructor({ tripContainer, pointsModel }) {
     this.#tripContainer = tripContainer;
@@ -42,7 +42,7 @@ export default class TripPresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsModel.updatedPoint(updateType, update);
+        this.#pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
         this.#pointsModel.addPoint(updateType, update);
@@ -54,17 +54,18 @@ export default class TripPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-   // В зависимости от типа изменений решаем, что делать:
+    // В зависимости от типа изменений решаем, что делать:
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this.#pointPresenters.get(data.newId).init(data);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
+        this.#clearTrip();
+        this.#renderTrip();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
+        this.#clearTrip({resetSortType: true});
+        this.#renderTrip();
         break;
     }
   };
@@ -75,13 +76,21 @@ export default class TripPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearPointsList();
-    this.#renderPointsList();
+    this.#clearTrip();
+    this.#renderTrip();
   };
 
-  #handlePointChange = (updatedPoint) => {
+  #renderSort() {
+    this.#sortComponent = new SortView({
+      currentSortType: this.#currentSortType,
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+    render(this.#sortComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #handlePointChange = (updatePoint) => {
     // Здесь будем вызывать обновление модели
-    this.#pointPresenters.get(updatedPoint.newId).init(updatedPoint);
+    this.#pointPresenters.get(updatePoint.newId).init(updatePoint);
   };
 
   #renderPoint(point) {
@@ -105,22 +114,30 @@ export default class TripPresenter {
     this.#renderPoints(points);
   }
 
-  #clearPointsList() {
+  // #clearPointsList() {
+  //   this.#pointPresenters.forEach((presenter) => presenter.destroy());
+  //   this.#pointPresenters.clear();
+  // }
+
+  #clearTrip(resetSortType = false) {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
-  }
 
-  #renderSort() {
-    this.#sortView = new SortView({
-      onSortTypeChange: this.#handleSortTypeChange
-    });
-    render(this.#sortView, this.#tripContainer, RenderPosition.AFTERBEGIN);
+    remove(this.#sortComponent);
+    // remove(this.#noPointComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #renderTrip() {
-    // ! Надо будет потом добавлять и оформлять данный компонент
-    // ! this.#renderNoTasks();
-    this.#renderPointsList();
+    const pointsCount = this.points.length;
+    if(pointsCount === 0) {
+      // this.#renderNoPoints();
+      return;
+    }
     this.#renderSort();
+    this.#renderPointsList();
   }
 }
