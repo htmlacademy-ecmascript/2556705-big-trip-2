@@ -23,5 +23,19 @@ function getDuration(start, end) {
   }
 }
 
-export {humanizeTaskDueDate, getDuration};
+function getRandomArrayElement(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function sortPointDay(pointA, pointB) {
+  return dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+}
+
+function isOffersInPoint (point, offers) {
+  const typeOffers = offers?.find((off) => off.type === point.type).offers || 'taxi';
+  const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
+  return pointOffers !== null;
+}
+
+export {humanizeTaskDueDate, getDuration, getRandomArrayElement, sortPointDay, isOffersInPoint};
 
