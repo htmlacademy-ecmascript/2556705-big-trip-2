@@ -40,7 +40,7 @@ export default class PointPresenter {
     );
 
     this.#pointEditComponent = new PointEditView(
-      this.#point, this.#destinations, this.#offers, this.#handleFormSubmit, this.#handleFormClose,  this.#handleDeleteClick
+      this.#point, this.#destinations, this.#offers, this.#handleFormSubmit, this.#handleFormClose, this.#handleDeleteClick
     );
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -48,8 +48,6 @@ export default class PointPresenter {
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
     if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
