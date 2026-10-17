@@ -40,7 +40,7 @@ export default class PointPresenter {
     );
 
     this.#pointEditComponent = new PointEditView(
-      this.#point, this.#destinations, this.#offers, this.#handleFormSubmit, this.#handleFormClose
+      this.#point, this.#destinations, this.#offers, this.#handleFormSubmit, this.#handleFormClose,  this.#handleDeleteClick
     );
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -113,12 +113,20 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleFormSubmit = (point) => {
+  #handleFormSubmit = (update) => {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
-      point,
+      update,
     );
     this.#replaceFormToCard();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 }
