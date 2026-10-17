@@ -39,9 +39,9 @@ export default class PointPresenter {
       this.#point, this.#destinations, this.#offers, this.#handleEditClick, this.#handleFavoriteClick
     );
 
-    this.#pointEditComponent = new PointEditView(
-      this.#point, this.#destinations, this.#offers, this.#handleFormSubmit, this.#handleFormClose, this.#handleDeleteClick
-    );
+    this.#pointEditComponent = new PointEditView({
+      point: this.#point, destinations: this.#destinations, offers: this.#offers, onFormSubmit: this.#handleFormSubmit, onFormClose: this.#handleFormClose, onDeleteClick: this.#handleDeleteClick
+    });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointsListContainer);

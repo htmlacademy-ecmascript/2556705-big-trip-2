@@ -116,7 +116,6 @@ function createPointEditTemplate(point, destinations, offers) {
   const timeTemplate = createPointEditTimeTemplate(dateTo, dateFrom, pointId);
   const priceTemplate = createPointEditPriceTemplate(basePrice, pointId);
   const buttonsTemplate = createPointEditButtonsTemplate(pointId);
-
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -147,7 +146,7 @@ export default class PointEditView extends AbstractStatefulView {
   #datepickerTo = null;
   #datepickerFrom = null;
 
-  constructor(point, destinations, offers, onFormSubmit, onFormClose, onDeleteClick) {
+  constructor({point, destinations, offers, onFormSubmit, onFormClose, onDeleteClick}) {
     super();
     this.#destinations = destinations;
     this.#offers = offers;
