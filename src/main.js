@@ -1,4 +1,4 @@
-import {render} from './framework/render.js';
+import {render, RenderPosition} from './framework/render.js';
 import PointsModel from './model/points-model.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import HeaderInfoView from './view/header-info-view.js';
@@ -21,7 +21,7 @@ const filterPresenter = new FilterPresenter({
   pointsModel
 });
 
-render(new HeaderInfoView(), headerInfoElement, 'afterbegin');
+render(new HeaderInfoView(), headerInfoElement, RenderPosition.AFTERBEGIN);
 
 filterPresenter.init();
 tripPresenter.init();

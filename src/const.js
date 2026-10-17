@@ -37,13 +37,6 @@ export const SortType = {
   OFFER: 'offer'
 };
 
-export const TEXT_NO_POINTS = {
-  everything: 'Click New Event to create your first point',
-  past: 'There are no past event now',
-  present: 'There are no past present now',
-  future: 'There are no future event now',
-};
-
 export const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
