@@ -1,5 +1,6 @@
 import { render, RenderPosition, remove } from '../framework/render.js';
 import { sortPointDay } from '../utils/utils.js';
+import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
 import SortView from '../view/sort-view.js';
 import PointsListView from '../view/points-list-view.js';
@@ -9,26 +10,36 @@ import PointPresenter from './point-presenter.js';
 import NoPointView from '../view/no-points-view.js';
 */
 export default class TripPresenter {
-  #tripContainer;
-  #pointsModel;
+  #tripContainer = null;
+  #pointsModel = null;
   #sortComponent = null;
+  #filterModel = null;
+
   #pointsListComponent = new PointsListView();
   #pointPresenters = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor({ tripContainer, pointsModel }) {
+  constructor({ tripContainer, pointsModel, filterModel }) {
     this.#tripContainer = tripContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
+
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[filterType](points);
+
+    // ! Переключатель оставлен, т.к. возможно будут add др. типы сортировки
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#pointsModel.points].sort(sortPointDay);
+        return filteredPoints.sort(sortPointDay);
     }
 
-    return this.#pointsModel.points;
+    return filteredPoints;
   }
 
   init() {
