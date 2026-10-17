@@ -1,4 +1,3 @@
-// Вставлять в .trip-events__list
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeTaskDueDate, getDuration } from '../utils/utils.js';
 import { DATE_FORMAT } from '../const.js';
@@ -7,7 +6,6 @@ const createPointTemplate = (point, destinations, offers) => {
   const typeOffers = offers.find((off) => off.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
   const pointDestination = destinations.find((dest) => dest.id === point.destination);
-  // humanizeTaskDueDate(dateFrom, DATE_FORMAT['hours-minutes'])
   return (
     `<li class="trip-events__item">
       <div class="event">

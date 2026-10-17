@@ -32,7 +32,7 @@ function sortPointDay(pointA, pointB) {
 }
 
 function isOffersInPoint (point, offers) {
-  const typeOffers = offers.find((off) => off.type === point.type).offers;
+  const typeOffers = offers?.find((off) => off.type === point.type).offers || 'taxi';
   const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
   return pointOffers !== null;
 }

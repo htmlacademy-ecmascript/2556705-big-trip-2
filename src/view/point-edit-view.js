@@ -1,4 +1,4 @@
-// Вставлять в .trip-events__list
+import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { DATE_FORMAT, POINT_TYPES } from '../const.js';
 import { humanizeTaskDueDate} from '../utils/utils.js';
@@ -7,14 +7,14 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const upFirstLetter = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
-const formatOfferTitle = (title) => title.split(' ').join('_');
+const formatOfferTitle = (title) => title?.split(' ').join('_');
 
 function createPointEditOffersTemplate(typeOffers, pointOffers, pointId) {
   return (
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-        ${typeOffers.map((typeOffer) => (
+        ${(typeOffers) ? typeOffers.map((typeOffer) => (
           `<div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-${formatOfferTitle(typeOffer.title)}-${pointId}" type="checkbox" data-offer-id=${typeOffer.id} name="event-offer-${formatOfferTitle(typeOffer.title)}" ${pointOffers.map((offer) => offer.id).includes(typeOffer.id) ? 'checked' : ''}>
             <label class="event__offer-label" for="event-offer-${formatOfferTitle(typeOffer.title)}-${pointId}">
@@ -23,7 +23,7 @@ function createPointEditOffersTemplate(typeOffers, pointOffers, pointId) {
             <span class="event__offer-price">${typeOffer.price}</span>
           </label>
         </div>`
-        )).join('')}
+        )).join('') : ''}
       </div>
     </section>`
   );
@@ -60,7 +60,7 @@ function createPointEditDestinationsTemplate(destinations, name, type, pointId) 
       </label>
       <input class="event__input  event__input--destination" id="event-destination-${pointId}" type="text" name="event-destination" value="${name || ''}" list="destination-list-${pointId}">
       <datalist id="destination-list-${pointId}">
-        ${destinations.map((destination) => `<option value='${destination.name}'></option>`).join('')}
+        ${(destinations) ? destinations.map((destination) => `<option value='${destination.name}'></option>`).join('') : ''}
       </datalist>
     </div>`
   );
@@ -94,18 +94,27 @@ function createPointEditButtonsTemplate(pointId) {
   return (
     `<button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
     <button class="event__reset-btn" type="reset">${pointId ? 'Delete' : 'Cancel'}</button>
-    ${pointId ? (
-      `<button class='event__rollup-btn' type='button'>
+      <button class='event__rollup-btn' type='button'>
       <span class='visually-hidden'>Open event </span>
       </button>`
-    ) : ''}`
+
   );
 }
 
+//${pointId ? (`
+// ) : ''}`
+
 function createPointEditTemplate(point, destinations, offers) {
-  const typeOffers = offers.find((off) => off.type === point.type).offers;
-  const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
-  const pointDestination = destinations.find((dest) => dest.id === point.destination);
+  if(Object.keys(point).length === 0) {
+    point.basePrice = 1000;
+    point.isFavorite = false;
+    point.type = 'taxi';
+    point.offers = null;
+    console.log(point);
+  }
+  const typeOffers = offers?.find((off) => off.type === point.type).offers || ['taxi'];
+  const pointOffers = (typeOffers) ? typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id)) : '';
+  const pointDestination = destinations?.find((dest) => dest.id === point.destination);
   const { dateFrom, dateTo, basePrice, type } = point;
   const { name } = pointDestination || {};
   const { description } = pointDestination || {};
@@ -123,7 +132,7 @@ function createPointEditTemplate(point, destinations, offers) {
           ${(offersTemplate) ? offersTemplate : ''}
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">${name}</h3>
-            <p class="event__destination-description">${description}</p>
+            <p class="event__destination-description">${(description == true) ? he.encode(description) : ''}</p>
           </section>
         </section>
         <header class="event__header">
