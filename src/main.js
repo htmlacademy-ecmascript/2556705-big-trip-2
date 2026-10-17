@@ -4,13 +4,8 @@ import TripPresenter from './presenter/trip-presenter.js';
 import HeaderInfoView from './view/header-info-view.js';
 import FilterView from './view/filter-view.js';
 import FilterModel from './model/filter-model.js';
+import FilterPresenter from './presenter/filter-presenter.js';
 
-const filters = [
-  {
-    type: 'everything',
-    count: 0,
-  },
-];
 
 const siteMainEventsElement = document.querySelector('.trip-events');
 const headerInfoElement = document.querySelector('.trip-main');
@@ -19,6 +14,11 @@ const pointsModel = new PointsModel();
 
 const filterModel = new FilterModel();
 const tripPresenter = new TripPresenter({ tripContainer: siteMainEventsElement, pointsModel });
+const filterPresenter = new FilterPresenter({
+  filterContainer: siteFilterElement,
+  filterModel,
+  pointsModel
+});
 
 render(new HeaderInfoView(), headerInfoElement, 'afterbegin');
 render(new FilterView({
@@ -26,4 +26,6 @@ render(new FilterView({
   currentFilterType: 'everything',
   onFilterTypeChange: () => {}
 }), siteFilterElement);
+
+filterPresenter.init();
 tripPresenter.init();
