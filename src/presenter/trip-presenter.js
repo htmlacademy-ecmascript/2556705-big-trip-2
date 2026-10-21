@@ -1,14 +1,16 @@
 import { render, RenderPosition, remove } from '../framework/render.js';
-import { sortPointDay } from '../utils/utils.js';
+import { sortPointDay, sortPointPrice } from '../utils/utils.js';
 import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import NoPointView from '../view/no-point-view.js';
 import SortView from '../view/sort-view.js';
 import PointsListView from '../view/points-list-view.js';
+import HeaderInfoPresenter from './header-info-presenter.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 export default class TripPresenter {
   #tripContainer = null;
+  #headerInfoContainer = null;
   #pointsModel = null;
   #sortComponent = null;
   #noPointComponent = null;
@@ -17,12 +19,14 @@ export default class TripPresenter {
   #filterModel = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
+  #headerInfoPresenter = null;
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor({ tripContainer, pointsModel, filterModel, onNewPointDestroy }) {
+  constructor({ tripContainer, headerInfoContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#tripContainer = tripContainer;
+    this.#headerInfoContainer = headerInfoContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
@@ -40,11 +44,11 @@ export default class TripPresenter {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
-
-    // ! Переключатель оставлен, т.к. возможно будут add др. типы сортировки
     switch (this.#currentSortType) {
       case SortType.DAY:
         return filteredPoints.sort(sortPointDay);
+      case SortType.PRICE:
+        return filteredPoints.sort(sortPointPrice);
     }
 
     return filteredPoints;
@@ -58,6 +62,7 @@ export default class TripPresenter {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init();
+
   }
 
   #handleModeChange = () => {
@@ -106,6 +111,15 @@ export default class TripPresenter {
     this.#renderTrip();
   };
 
+  #renderHeader() {
+    const points = this.points;
+    this.#headerInfoPresenter = new HeaderInfoPresenter({
+      pointsModel: this.#pointsModel,
+      headerInfoContainer: this.#headerInfoContainer
+    });
+    this.#headerInfoPresenter.init(points);
+  }
+
   #renderSort() {
     this.#sortComponent = new SortView({
       currentSortType: this.#currentSortType,
@@ -144,9 +158,9 @@ export default class TripPresenter {
 
   #clearTrip(resetSortType = false) {
     this.#newPointPresenter.destroy();
+    this.#headerInfoPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
-
     remove(this.#sortComponent);
 
     if (this.#noPointComponent) {
@@ -165,6 +179,7 @@ export default class TripPresenter {
       this.#renderNoPoints();
       return;
     }
+    this.#renderHeader();
     this.#renderSort();
     render(this.#pointsListComponent, this.#tripContainer);
     this.#renderPoints(points);

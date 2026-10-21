@@ -101,18 +101,17 @@ function createPointEditButtonsTemplate(pointId) {
   );
 }
 
-//${pointId ? (`
-// ) : ''}`
-
 function createPointEditTemplate(point, destinations, offers) {
   if(Object.keys(point).length === 0) {
-    point.basePrice = 1000;
+    point.basePrice = 0;
+    point.dateFrom = new Date();
+    point.dateTo = new Date();
+    point.destination = destinations[0].id;
     point.isFavorite = false;
-    point.type = 'taxi';
     point.offers = null;
-    console.log(point);
+    point.type = 'taxi';
   }
-  const typeOffers = offers?.find((off) => off.type === point.type).offers || ['taxi'];
+  const typeOffers = offers?.find((offer) => offer.type === point.type).offers;
   const pointOffers = (typeOffers) ? typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id)) : '';
   const pointDestination = destinations?.find((dest) => dest.id === point.destination);
   const { dateFrom, dateTo, basePrice, type } = point;
@@ -132,7 +131,7 @@ function createPointEditTemplate(point, destinations, offers) {
           ${(offersTemplate) ? offersTemplate : ''}
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">${name}</h3>
-            <p class="event__destination-description">${(description == true) ? he.encode(description) : ''}</p>
+            <p class="event__destination-description">${(description) ? he.encode(description) : ''}</p>
           </section>
         </section>
         <header class="event__header">

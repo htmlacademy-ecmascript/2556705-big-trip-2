@@ -22,7 +22,7 @@ export default class SortView extends AbstractView {
     super();
     this.#currentSortType = currentSortType;
     this.#handleSortTypeChange = onSortTypeChange;
-
+    console.log(this.element);
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
   }
 
@@ -34,7 +34,7 @@ export default class SortView extends AbstractView {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
-
+    console.log('Обработчик сработал верно');
     evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };

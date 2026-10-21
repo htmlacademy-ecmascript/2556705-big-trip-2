@@ -4,7 +4,7 @@ import { DATE_FORMAT } from '../const.js';
 const createPointTemplate = (point, destinations, offers) => {
   const { basePrice, isFavorite, dateFrom, dateTo, type } = point;
   const typeOffers = offers.find((off) => off.type === point.type).offers;
-  const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
+  const pointOffers = typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id));
   const pointDestination = destinations.find((dest) => dest.id === point.destination);
   return (
     `<li class="trip-events__item">

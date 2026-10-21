@@ -1,7 +1,7 @@
 import Observable from '../framework/observable.js';
-import { getRandomPoint } from '../mocks/points'; //! .js
-import { offers } from '../mocks/offers'; //! .js
-import { destinations } from '../mocks/destinations'; //! .js
+import { getRandomPoint } from '../mocks/points.js';
+import { offers } from '../mocks/offers.js';
+import { destinations } from '../mocks/destinations.js';
 
 const POINT_COUNT = 3;
 export default class PointsModel extends Observable {
@@ -28,10 +28,7 @@ export default class PointsModel extends Observable {
       throw new Error('Can\'t update unexisting point');
     }
 
-    this.#points = [
-      ...this.#points,
-      update,
-    ];
+    this.#points = [...this.#points.map((point, i) => (i === index) ? update : point)];
 
     this._notify(updateType, update);
   }
