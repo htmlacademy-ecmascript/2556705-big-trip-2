@@ -7,7 +7,6 @@ import FilterModel from './model/filter-model.js';
 
 const siteMainEventsElement = document.querySelector('.trip-events');
 const headerInfoElement = document.querySelector('.trip-main');
-const headerInfoElementClone = headerInfoElement.cloneNode();
 const siteFilterElement = document.querySelector('.trip-main__trip-controls');
 const pointsModel = new PointsModel();
 
@@ -36,7 +35,7 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
-render(newPointButtonComponent, headerInfoElementClone);
+render(newPointButtonComponent, headerInfoElement);
 
 filterPresenter.init();
 tripPresenter.init();
