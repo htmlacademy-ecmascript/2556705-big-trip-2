@@ -41,7 +41,3 @@ render(newPointButtonComponent, headerInfoElement);
 filterPresenter.init();
 tripPresenter.init();
 
-// Находим повторно созданный эл-нт
-const newPointButton = document.querySelector('.trip-main__event-add-btn');
-// Удаляем повторно созданный эл-нт
-newPointButton.remove();
