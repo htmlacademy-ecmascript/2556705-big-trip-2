@@ -127,13 +127,6 @@ function createPointEditTemplate(point, destinations, offers) {
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
-        <section class="event__details">
-          ${(offersTemplate) ? offersTemplate : ''}
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">${name}</h3>
-            <p class="event__destination-description">${(description) ? he.encode(description) : ''}</p>
-          </section>
-        </section>
         <header class="event__header">
           ${typesTemplate}
           ${(destinationsTemplate) ? destinationsTemplate : ''}
@@ -141,6 +134,13 @@ function createPointEditTemplate(point, destinations, offers) {
           ${priceTemplate}
           ${buttonsTemplate}
         </header>
+        <section class="event__details">
+          ${(offersTemplate) ? offersTemplate : ''}
+          <section class="event__section  event__section--destination">
+            <h3 class="event__section-title  event__section-title--destination">${name}</h3>
+            <p class="event__destination-description">${(description) ? he.encode(description) : ''}</p>
+          </section>
+        </section>
       </form>
     </li>`
   );
