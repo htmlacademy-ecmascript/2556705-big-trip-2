@@ -66,6 +66,15 @@ function createPointEditDestinationsTemplate(destinations, name, type, pointId) 
   );
 }
 
+function createPointEditDestinationDescriptionTemplate(description, name) {
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">${name}</h3>
+      <p class="event__destination-description">${(description) ? he.encode(description) : ''}</p>
+    </section>`
+  );
+}
+
 function createPointEditTimeTemplate(dateTo, dateFrom, pointId) {
   return (
     `<div class="event__field-group  event__field-group--time">
@@ -97,7 +106,18 @@ function createPointEditButtonsTemplate(pointId) {
       <button class='event__rollup-btn' type='button'>
       <span class='visually-hidden'>Open event </span>
       </button>`
+  );
+}
 
+function createPointEditPicturesTemplate(pointPictures) {
+  return (
+    `${(pointPictures.length !== 0) ? `<div class="event__photos-container">
+      <div class="event__photos-tape">
+      ${pointPictures.map((pointPicture) => (
+        `<img class="event__photo" src="${pointPicture.src}" alt="${pointPicture.description}">`
+      )).join('')}
+      </div>
+    </div>` : ''}`
   );
 }
 
@@ -109,11 +129,12 @@ function createPointEditTemplate(point, destinations, offers) {
     point.destination = destinations[0].id;
     point.isFavorite = false;
     point.offers = null;
-    point.type = 'taxi';
+    point.type = 'flight';
   }
   const typeOffers = offers?.find((offer) => offer.type === point.type).offers;
   const pointOffers = (typeOffers) ? typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id)) : '';
   const pointDestination = destinations?.find((dest) => dest.id === point.destination);
+  const pointPictures = pointDestination.pictures;
   const { dateFrom, dateTo, basePrice, type } = point;
   const { name } = pointDestination || {};
   const { description } = pointDestination || {};
@@ -121,9 +142,11 @@ function createPointEditTemplate(point, destinations, offers) {
   const offersTemplate = createPointEditOffersTemplate(typeOffers, pointOffers, pointId);
   const typesTemplate = createPointEditTypesTemplate(type, pointId);
   const destinationsTemplate = createPointEditDestinationsTemplate(destinations, name, type, pointId);
+  const destinationDescriptionTemplate = createPointEditDestinationDescriptionTemplate(description, name);
   const timeTemplate = createPointEditTimeTemplate(dateTo, dateFrom, pointId);
   const priceTemplate = createPointEditPriceTemplate(basePrice, pointId);
   const buttonsTemplate = createPointEditButtonsTemplate(pointId);
+  const picturesTemplate = createPointEditPicturesTemplate(pointPictures);
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -136,10 +159,8 @@ function createPointEditTemplate(point, destinations, offers) {
         </header>
         <section class="event__details">
           ${(offersTemplate) ? offersTemplate : ''}
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">${name}</h3>
-            <p class="event__destination-description">${(description) ? he.encode(description) : ''}</p>
-          </section>
+          ${destinationDescriptionTemplate}
+          ${picturesTemplate}
         </section>
       </form>
     </li>`
@@ -221,7 +242,7 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #typeChangeHandler = (evt) => {
-    this.updateElement({...this._state, type: evt.target.value});
+    this.updateElement({...this._state, type: evt.target.value, offers: null});
   };
 
   #destinationChangeHandler = (evt) => {

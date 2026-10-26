@@ -5,9 +5,13 @@ const destinations = [
     name: 'Moscow',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        src: 'img/photos/1.jpg',
         description: 'Moscow description picture 1'
-      }
+      },
+      {
+        src: 'img/photos/2.jpg',
+        description: 'Moscow description picture 2'
+      },
     ]
   },
   {
@@ -16,9 +20,21 @@ const destinations = [
     name: 'London',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'London description picture 1'
-      }
+        src: 'img/photos/1.jpg',
+        description: 'Moscow description picture 1'
+      },
+      {
+        src: 'img/photos/2.jpg',
+        description: 'Moscow description picture 2'
+      },
+      {
+        src: 'img/photos/3.jpg',
+        description: 'Moscow description picture 3'
+      },
+      {
+        src: 'img/photos/4.jpg',
+        description: 'Moscow description picture 4'
+      },
     ]
   },
   {

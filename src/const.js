@@ -1,4 +1,4 @@
-export const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+export const POINT_TYPES = ['taxi', 'drive', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 export const HOURS_IN_DAY = 24;
 export const SECONDS_IN_MINUTES = 60;
