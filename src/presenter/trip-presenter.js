@@ -1,5 +1,5 @@
 import { render, RenderPosition, remove } from '../framework/render.js';
-import { sortPointDay, sortPointPrice } from '../utils/utils.js';
+import { sortPointDay, sortPointTime, sortPointPrice } from '../utils/utils.js';
 import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import NoPointView from '../view/no-point-view.js';
@@ -46,9 +46,11 @@ export default class TripPresenter {
     const filteredPoints = filter[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return filteredPoints.sort(sortPointDay);
+        return [...filteredPoints].sort(sortPointDay);
+      case SortType.TIME:
+        return [...filteredPoints].sort(sortPointTime);
       case SortType.PRICE:
-        return filteredPoints.sort(sortPointPrice);
+        return [...filteredPoints].sort(sortPointPrice);
     }
 
     return filteredPoints;
