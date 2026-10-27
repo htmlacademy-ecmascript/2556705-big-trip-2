@@ -128,11 +128,6 @@ export default class TripPresenter {
     render(this.#sortComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #handlePointChange = (updatePoint) => {
-    // Здесь будем вызывать обновление модели
-    this.#pointPresenters.get(updatePoint.newId).init(updatePoint);
-  };
-
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       pointsListContainer: this.#pointsListComponent.element,
