@@ -1,15 +1,17 @@
 export const POINT_TYPES = ['taxi', 'drive', 'bus', 'train', 'ship', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 export const HOURS_IN_DAY = 24;
-export const SECONDS_IN_MINUTES = 60;
-export const MILLISECONDS_IN_MINUTES = 60000;
+export const MILLISECONDS_IN_MINUTE = 60000;
+export const MINUTES_IN_HOUR = 60;
 export const DATE_FORMAT = {
   'classic-date': 'YYYY-MM-DD',
   'full-date': 'DD/MM/YY hh:mm',
   'hours-minutes': 'hh:mm',
-  'number': 'DD',
+  'full-hours-minutes': 'HH:mm',
+  'minutes': 'mm',
+  // 'date': 'DD',
   'month': 'MMM',
-  'number-month': 'DD MMM',
+  'date-month': 'DD MMM',
 };
 
 export const DEFAULT_POINT = {
