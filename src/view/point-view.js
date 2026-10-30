@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeTaskDueDate, getDuration } from '../utils/utils.js';
+import { humanizePointDueDate, getDuration } from '../utils/utils.js';
 import { DATE_FORMAT } from '../const.js';
 const createPointTemplate = (point, destinations, offers) => {
   const { basePrice, isFavorite, dateFrom, dateTo, type } = point;
@@ -9,18 +9,18 @@ const createPointTemplate = (point, destinations, offers) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime=${humanizeTaskDueDate(dateFrom, DATE_FORMAT['classic-date'])}>${humanizeTaskDueDate(dateFrom, DATE_FORMAT['number-month'])}</time>
+        <time class="event__date" datetime=${humanizePointDueDate(dateFrom, DATE_FORMAT['classic-date'])}>${humanizePointDueDate(dateFrom, DATE_FORMAT['date-month'])}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${pointDestination.name}</h3>
+        <h3 class="event__title">${type} ${pointDestination?.name || ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${humanizeTaskDueDate(dateFrom, DATE_FORMAT['classic-date'])}T${humanizeTaskDueDate(dateFrom, DATE_FORMAT['hours-minutes'])}">${humanizeTaskDueDate(dateFrom, DATE_FORMAT['hours-minutes'])}</time>
+            <time class="event__start-time" datetime="${humanizePointDueDate(dateFrom, DATE_FORMAT['classic-date'])}T${humanizePointDueDate(dateFrom, DATE_FORMAT['hours-minutes'])}">${humanizePointDueDate(dateFrom, DATE_FORMAT['full-hours-minutes'])}</time>
             &mdash;
-            <time class="event__end-time" datetime="${humanizeTaskDueDate(dateTo, DATE_FORMAT['classic-date'])}T${humanizeTaskDueDate(dateTo, DATE_FORMAT['hours-minutes'])}">${humanizeTaskDueDate(dateTo, DATE_FORMAT['hours-minutes'])}</time>
+            <time class="event__end-time" datetime="${humanizePointDueDate(dateTo, DATE_FORMAT['classic-date'])}T${humanizePointDueDate(dateTo, DATE_FORMAT['hours-minutes'])}">${humanizePointDueDate(dateTo, DATE_FORMAT['full-hours-minutes'])}</time>
           </p>
-          <p class="event__duration">${getDuration(dateFrom, dateTo)}</p>
+          <p class="event__duration">${(dateFrom || dateTo) ? getDuration(dateFrom, dateTo) : ''}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
