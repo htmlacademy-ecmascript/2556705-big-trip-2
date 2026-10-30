@@ -60,7 +60,7 @@ function createPointEditDestinationsTemplate(destinations, name, type, pointId) 
       </label>
       <input class="event__input  event__input--destination" id="event-destination-${pointId}" type="text" name="event-destination" value="${name || ''}" list="destination-list-${pointId}">
       <datalist id="destination-list-${pointId}">
-        ${(destinations) ? destinations.map((destination) => `<option value='${destination.name}'></option>`).join('') : ''}
+        ${(destinations) ? destinations.map((destination) => `<option value='${destination.name}' autocomplete="off"></option>`).join('') : ''}
       </datalist>
     </div>`
   );
@@ -94,7 +94,7 @@ function createPointEditPriceTemplate(basePrice, pointId) {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" value=${basePrice}>
+      <input class="event__input  event__input--price" id="event-price-${pointId}" type="number" min="0" name="event-price" value=${basePrice} autocomplete="off">
     </div>`
   );
 }
@@ -111,9 +111,9 @@ function createPointEditButtonsTemplate(pointId) {
 
 function createPointEditPicturesTemplate(pointPictures) {
   return (
-    `${(pointPictures.length !== 0) ? `<div class="event__photos-container">
+    `${(pointPictures?.length !== 0) ? `<div class="event__photos-container">
       <div class="event__photos-tape">
-      ${pointPictures.map((pointPicture) => (
+      ${pointPictures?.map((pointPicture) => (
       `<img class="event__photo" src="${pointPicture.src}" alt="${pointPicture.description}">`
     )).join('')}
       </div>
@@ -124,9 +124,9 @@ function createPointEditPicturesTemplate(pointPictures) {
 function createPointEditTemplate(point, destinations, offers) {
   if (Object.keys(point).length === 0) {
     point.basePrice = 0;
-    point.dateFrom = new Date();
-    point.dateTo = new Date();
-    point.destination = destinations[0].id;
+    point.dateFrom = '';
+    point.dateTo = '';
+    point.destination = '';
     point.isFavorite = false;
     point.offers = null;
     point.type = 'flight';
@@ -134,7 +134,7 @@ function createPointEditTemplate(point, destinations, offers) {
   const typeOffers = offers?.find((offer) => offer.type === point.type).offers;
   const pointOffers = (typeOffers) ? typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id)) : '';
   const pointDestination = destinations?.find((dest) => dest.id === point.destination);
-  const pointPictures = pointDestination.pictures;
+  const pointPictures = pointDestination?.pictures;
   const { dateFrom, dateTo, basePrice, type } = point;
   const { name } = pointDestination || {};
   const { description } = pointDestination || {};
@@ -159,8 +159,8 @@ function createPointEditTemplate(point, destinations, offers) {
         </header>
         <section class="event__details">
           ${(offersTemplate) ? offersTemplate : ''}
-          ${destinationDescriptionTemplate}
-          ${picturesTemplate}
+          ${(point.destination) ? destinationDescriptionTemplate : ''}
+          ${(point.destination) ? picturesTemplate : ''}
         </section>
       </form>
     </li>`
