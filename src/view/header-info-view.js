@@ -9,7 +9,7 @@ function createHeaderInfoTemplate(points) {
     total + (Number(value) || 0), 0);
   const totalPointDestinations = points.map((point) => point.destination);
   const totalDestinations = totalPointDestinations.map((destination) => destinations?.find((dest) => dest.id === destination));
-  const totalNamesDestinations = totalDestinations.map((destination) => destination.name).join('-');
+  const totalNamesDestinations = totalDestinations.map((destination) => destination?.name).join('-');
   const startTimeTrip = points[0].dateFrom;
   const endTimeTrip = points[points.length - 1].dateTo;
   return (

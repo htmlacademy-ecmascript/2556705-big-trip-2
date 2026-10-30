@@ -95,6 +95,8 @@ export default class PointPresenter {
   };
 
   #replaceCardToForm() {
+    // Делаем кнопку add new event заблокированной
+    document.querySelector('.trip-main__event-add-btn').disabled = true;
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#handleModeChange();
@@ -102,6 +104,8 @@ export default class PointPresenter {
   }
 
   #replaceFormToCard() {
+    // Делаем кнопку add new event разблокированной
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -121,6 +125,8 @@ export default class PointPresenter {
   };
 
   #handleDeleteClick = (point) => {
+    // Делаем кнопку add new event разблокированной
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,

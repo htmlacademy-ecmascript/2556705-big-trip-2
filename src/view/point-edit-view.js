@@ -66,10 +66,10 @@ function createPointEditDestinationsTemplate(destinations, name, type, pointId) 
   );
 }
 
-function createPointEditDestinationDescriptionTemplate(description, name) {
+function createPointEditDestinationDescriptionTemplate(description) {
   return (
     `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">${name}</h3>
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${(description) ? he.encode(description) : ''}</p>
     </section>`
   );
@@ -133,8 +133,11 @@ function createPointEditTemplate(point, destinations, offers) {
   }
   const typeOffers = offers?.find((offer) => offer.type === point.type).offers;
   const pointOffers = (typeOffers) ? typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id)) : '';
-  const pointDestination = destinations?.find((dest) => dest.id === point.destination);
-  const pointPictures = pointDestination?.pictures;
+  const pointDestination = destinations?.find((dest) => dest.id === point.destination) || '';
+  // if (pointDestination === '') {
+  //   point.destination = '';
+  // }
+  const pointPictures = pointDestination?.pictures || '';
   const { dateFrom, dateTo, basePrice, type } = point;
   const { name } = pointDestination || {};
   const { description } = pointDestination || {};

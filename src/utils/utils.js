@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { duration } from 'dayjs/plugin/duration';
 import {
   HOURS_IN_DAY,
   MILLISECONDS_IN_MINUTE,
