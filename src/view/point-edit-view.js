@@ -58,7 +58,7 @@ function createPointEditDestinationsTemplate(destinations, name, type, pointId) 
       <label class="event__label  event__type-output" for="event-destination-${pointId}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${pointId}" type="text" name="event-destination" value="${name || ''}" list="destination-list-${pointId}">
+      <input class="event__input  event__input--destination" id="event-destination-${pointId}" type="text"  name="event-destination" value="${name || ''}" list="destination-list-${pointId}" required>
       <datalist id="destination-list-${pointId}">
         ${(destinations) ? destinations.map((destination) => `<option value='${destination.name}' autocomplete="off"></option>`).join('') : ''}
       </datalist>
@@ -161,7 +161,7 @@ function createPointEditTemplate(point, destinations, offers) {
           ${buttonsTemplate}
         </header>
         <section class="event__details">
-          ${(offersTemplate) ? offersTemplate : ''}
+          ${(typeOffers.length) ? offersTemplate : ''}
           ${(point.destination) ? destinationDescriptionTemplate : ''}
           ${(point.destination) ? picturesTemplate : ''}
         </section>
@@ -245,14 +245,19 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #typeChangeHandler = (evt) => {
-    this.updateElement({ ...this._state, type: evt.target.value, offers: null });
+    this.updateElement({ ...this._state, type: evt.target.value, offers: [] });
   };
 
   #destinationChangeHandler = (evt) => {
-    const selectedDestination = this.#destinations.find((pointDestination) => pointDestination.name === evt.target.value);
-    const selectedDestinationId = (selectedDestination) ? selectedDestination.id : null;
-    this.updateElement({ ...this._state, destination: selectedDestinationId });
-  };
+    const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+
+    if (!selectedDestination) {
+      evt.target.setCustomValidity('Выберите пункт назначения из списка');
+      return;
+    }
+
+    this.updateElement({ destination: selectedDestination.id });
+};
 
   #priceChangeHandler = (evt) => {
     this._setState({ ...this._state, basePrice: evt.target.value });

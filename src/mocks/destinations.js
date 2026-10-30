@@ -21,19 +21,19 @@ const destinations = [
     pictures: [
       {
         src: 'img/photos/1.jpg',
-        description: 'Moscow description picture 1'
+        description: 'London description picture 1'
       },
       {
         src: 'img/photos/2.jpg',
-        description: 'Moscow description picture 2'
+        description: 'London description picture 2'
       },
       {
         src: 'img/photos/3.jpg',
-        description: 'Moscow description picture 3'
+        description: 'London description picture 3'
       },
       {
         src: 'img/photos/4.jpg',
-        description: 'Moscow description picture 4'
+        description: 'London description picture 4'
       },
     ]
   },
