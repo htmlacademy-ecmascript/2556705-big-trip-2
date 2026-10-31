@@ -40,4 +40,3 @@ render(newPointButtonComponent, headerInfoElement);
 
 filterPresenter.init();
 tripPresenter.init();
-
