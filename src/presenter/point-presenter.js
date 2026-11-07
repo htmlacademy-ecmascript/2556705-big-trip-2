@@ -53,7 +53,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEditComponent);
+      replace(this.#pointComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -70,6 +71,41 @@ export default class PointPresenter {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
   }
 
   #handleFavoriteClick = () => {
@@ -104,11 +140,11 @@ export default class PointPresenter {
   }
 
   #replaceFormToCard() {
-    // Делаем кнопку add new event разблокированной
-    document.querySelector('.trip-main__event-add-btn').disabled = false;
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
+    // Делаем кнопку add new event разблокированной
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
   }
 
   #handleEditClick = () => {
@@ -121,16 +157,17 @@ export default class PointPresenter {
       UpdateType.MINOR,
       update,
     );
-    this.#replaceFormToCard();
+    // Делаем кнопку add new event разблокированной
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
   };
 
   #handleDeleteClick = (point) => {
-    // Делаем кнопку add new event разблокированной
-    document.querySelector('.trip-main__event-add-btn').disabled = false;
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
       point,
     );
+    // Делаем кнопку add new event разблокированной
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
   };
 }

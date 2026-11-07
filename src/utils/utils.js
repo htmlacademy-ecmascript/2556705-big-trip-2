@@ -30,10 +30,6 @@ function getDuration(start, end) {
   }
 }
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
 function sortPointDay(pointA, pointB) {
   return dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 }
@@ -52,5 +48,5 @@ function isOffersInPoint(point, offers) {
   return pointOffers !== null;
 }
 
-export { humanizePointDueDate, getDuration, getRandomArrayElement, sortPointDay, sortPointTime, sortPointPrice, isOffersInPoint };
+export { humanizePointDueDate, getDuration, sortPointDay, sortPointTime, sortPointPrice, isOffersInPoint };
 

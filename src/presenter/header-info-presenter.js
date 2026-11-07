@@ -3,6 +3,7 @@ import HeaderInfoView from '../view/header-info-view.js';
 
 export default class HeaderInfoPresenter {
   #points = null;
+  #destinations = null;
   #pointsModel = null;
   #headerInfoContainer = null;
   #headerInfoComponent = null;
@@ -14,9 +15,10 @@ export default class HeaderInfoPresenter {
 
   init(points) {
     this.#points = points;
+    this.#destinations = this.#pointsModel.destinations;
     const prevHeaderInfoComponent = this.#headerInfoComponent;
 
-    this.#headerInfoComponent = new HeaderInfoView(this.#points);
+    this.#headerInfoComponent = new HeaderInfoView(this.#points, this.#destinations);
 
     if (prevHeaderInfoComponent === null) {
       render(this.#headerInfoComponent, this.#headerInfoContainer, RenderPosition.AFTERBEGIN);
