@@ -3,6 +3,8 @@ import { DATE_FORMAT } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 function createHeaderInfoTemplate(points, destinations) {
   const totalBasePrice = points.map((point) => point.basePrice);
+  // const totalOffersPrice = points.map((point) =>
+  //   point.offers.map((offer) => offer));
   const totalPrice = totalBasePrice.reduce((total, value) =>
     total + (Number(value) || 0), 0);
   const totalPointDestinations = points.map((point) => point.destination);
