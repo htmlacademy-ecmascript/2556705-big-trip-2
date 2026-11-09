@@ -149,12 +149,13 @@ export default class TripPresenter {
   };
 
   #renderHeader() {
-    const points = this.points;
+    const sortedPoints = [...this.#pointsModel.points].sort(sortPointDay);
+
     this.#headerInfoPresenter = new HeaderInfoPresenter({
       pointsModel: this.#pointsModel,
       headerInfoContainer: this.#headerInfoContainer
     });
-    this.#headerInfoPresenter.init(points);
+    this.#headerInfoPresenter.init(sortedPoints);
   }
 
   #renderSort() {
@@ -219,14 +220,18 @@ export default class TripPresenter {
 
     render(this.#pointsListComponent, this.#tripContainer);
 
+    if (this.#pointsModel.points.length > 0) {
+      this.#renderHeader();
+    }
+
     const points = this.points;
     const pointsCount = points.length;
 
-    if(pointsCount === 0) {
+    if (pointsCount === 0) {
       this.#renderNoPoints();
       return;
     }
-    this.#renderHeader();
+
     this.#renderSort();
     this.#renderPoints(points);
   }
