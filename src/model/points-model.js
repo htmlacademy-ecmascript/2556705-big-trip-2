@@ -1,11 +1,14 @@
-import Observable from '../framework/observable.js';
 import { UpdateType } from '../const.js';
+import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
   #dataApiService = null;
   #points = [];
   #offers = null;
   #destinations = null;
+  #messageFromServer = null;
+  #hasServerError = null;
+
 
   constructor({ dataApiService }) {
     super();
@@ -24,17 +27,24 @@ export default class PointsModel extends Observable {
     return this.#destinations;
   }
 
+  get messageFromServer() {
+    return this.#messageFromServer;
+  }
+
+  get hasServerError() {
+    return this.#hasServerError;
+  }
+
   #adaptToClient(point) {
     const adaptedPoint = {
       ...point,
-      // На клиенте дата хранится как экземпляр Date
+
       dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
       dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
       basePrice: point['base_price'],
       isFavorite: point['is_favorite'],
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint['date_from'];
     delete adaptedPoint['date_to'];
     delete adaptedPoint['base_price'];
@@ -45,12 +55,17 @@ export default class PointsModel extends Observable {
 
   async init() {
     try {
+      this.#messageFromServer = 'Loading...';
       const points = await this.#dataApiService.points;
       this.#offers = await this.#dataApiService.offers;
       this.#destinations = await this.#dataApiService.destinations;
       this.#points = points.map(this.#adaptToClient);
+      this.#hasServerError = false;
+      this.#messageFromServer = 'Loading...';
     } catch (err) {
       this.#points = [];
+      this.#hasServerError = true;
+      this.#messageFromServer = 'Failed to load latest route information';
     }
 
     this._notify(UpdateType.INIT);

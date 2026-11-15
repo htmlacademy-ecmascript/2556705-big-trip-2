@@ -1,6 +1,7 @@
-import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueDate, getDuration } from '../utils/utils.js';
-import { DATE_FORMAT } from '../const.js';
+import { DateFormat } from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
+
 const createPointTemplate = (point, destinations, offers) => {
   const { basePrice, isFavorite, dateFrom, dateTo, type } = point;
   const typeOffers = offers.find((off) => off.type === point.type).offers;
@@ -9,16 +10,16 @@ const createPointTemplate = (point, destinations, offers) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime=${humanizePointDueDate(dateFrom, DATE_FORMAT['classic-date'])}>${humanizePointDueDate(dateFrom, DATE_FORMAT['date-month'])}</time>
+        <time class="event__date" datetime=${humanizePointDueDate(dateFrom, DateFormat['classic-date'])}>${humanizePointDueDate(dateFrom, DateFormat['date-month']).split(' ').reverse().join(' ')}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${pointDestination?.name || ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${humanizePointDueDate(dateFrom, DATE_FORMAT['classic-date'])}T${humanizePointDueDate(dateFrom, DATE_FORMAT['hours-minutes'])}">${humanizePointDueDate(dateFrom, DATE_FORMAT['full-hours-minutes'])}</time>
+            <time class="event__start-time" datetime="${humanizePointDueDate(dateFrom, DateFormat['classic-date'])}T${humanizePointDueDate(dateFrom, DateFormat['hours-minutes'])}">${humanizePointDueDate(dateFrom, DateFormat['full-hours-minutes'])}</time>
             &mdash;
-            <time class="event__end-time" datetime="${humanizePointDueDate(dateTo, DATE_FORMAT['classic-date'])}T${humanizePointDueDate(dateTo, DATE_FORMAT['hours-minutes'])}">${humanizePointDueDate(dateTo, DATE_FORMAT['full-hours-minutes'])}</time>
+            <time class="event__end-time" datetime="${humanizePointDueDate(dateTo, DateFormat['classic-date'])}T${humanizePointDueDate(dateTo, DateFormat['hours-minutes'])}">${humanizePointDueDate(dateTo, DateFormat['full-hours-minutes'])}</time>
           </p>
           <p class="event__duration">${(dateFrom || dateTo) ? getDuration(dateFrom, dateTo) : ''}</p>
         </div>
@@ -34,7 +35,6 @@ const createPointTemplate = (point, destinations, offers) => {
             <span class="event__offer-price">${offer.price}</span>
           </li>`
     )).join('')}
-
         </ul>
         <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''} " type="button">
           <span class="visually-hidden">Add to favorite</span>
@@ -51,9 +51,9 @@ const createPointTemplate = (point, destinations, offers) => {
 };
 
 export default class PointView extends AbstractView {
-  #point;
-  #destinations;
-  #offers;
+  #point = null;
+  #destinations = null;
+  #offers = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
 

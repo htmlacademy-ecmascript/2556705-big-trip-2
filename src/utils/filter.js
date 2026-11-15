@@ -13,11 +13,11 @@ function isPointInPresent (point) {
   return dayjs(point.dateFrom).diff(dayjs(new Date())) < 0 && dayjs(point.dateTo).diff(dayjs(new Date())) > 0;
 }
 
-const filter = {
+const Filter = {
   [FilterType.EVERYTHING]: (points) => points,
   [FilterType.FUTURE]: (points) => points.filter((point) => isPointInFuture(point)),
   [FilterType.PRESENT]: (points) => points.filter((point) => isPointInPresent(point)),
   [FilterType.PAST]: (points) => points.filter((point) => isPointInPast(point)),
 };
 
-export {filter};
+export {Filter};

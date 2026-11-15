@@ -1,13 +1,9 @@
+import { DateFormat, POINT_TYPES } from '../const.js';
+import { humanizePointDueDate, upFirstLetter, formatOfferTitle } from '../utils/utils.js';
 import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { DATE_FORMAT, POINT_TYPES } from '../const.js';
-import { humanizePointDueDate } from '../utils/utils.js';
 import flatpickr from 'flatpickr';
-
 import 'flatpickr/dist/flatpickr.min.css';
-
-const upFirstLetter = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
-const formatOfferTitle = (title) => title?.split(' ').join('_');
 
 function createPointEditOffersTemplate(typeOffers, pointOffers, pointId, isDisabled) {
   return (
@@ -79,10 +75,10 @@ function createPointEditTimeTemplate(dateTo, dateFrom, pointId, isDisabled) {
   return (
     `<div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-${pointId}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${pointId}" type="text" name="event-start-time" value="${humanizePointDueDate(dateFrom, DATE_FORMAT['full-date'])}" ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--time" id="event-start-time-${pointId}" type="text" name="event-start-time" value="${humanizePointDueDate(dateFrom, DateFormat['full-date'])}" ${isDisabled ? 'disabled' : ''}>
       &mdash;
       <label class="visually-hidden" for="event-end-time-${pointId}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${humanizePointDueDate(dateTo, DATE_FORMAT['full-date'])}" ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${humanizePointDueDate(dateTo, DateFormat['full-date'])}" ${isDisabled ? 'disabled' : ''}>
     </div>`
   );
 }
@@ -123,14 +119,13 @@ function createPointEditPicturesTemplate(pointPictures) {
 }
 
 function createPointEditTemplate(point, destinations, offers) {
+  const { dateFrom, dateTo, basePrice, type, isDisabled, isSaving, isDeleting } = point;
   const typeOffers = offers?.find((offer) => offer.type === point.type)?.offers;
   const pointOffers = (typeOffers) ? typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id)) : '';
   const pointDestination = destinations?.find((dest) => dest.id === point.destination) || '';
-
-  const pointPictures = pointDestination?.pictures || '';
-  const { dateFrom, dateTo, basePrice, type, isDisabled, isSaving, isDeleting } = point;
   const { name } = pointDestination || {};
-  const { description } = pointDestination || {};
+  const { description } = pointDestination || '';
+  const pointPictures = pointDestination?.pictures || '';
   const pointId = point.id || 0;
 
   const offersTemplate = createPointEditOffersTemplate(typeOffers, pointOffers, pointId, isDisabled);
@@ -153,14 +148,9 @@ function createPointEditTemplate(point, destinations, offers) {
         </header>
         <section class="event__details">
           ${(typeOffers?.length) ?
-      offersTemplate :
-      `<section class="event__section  event__section--offers">
-              <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-              <div class="event__available-offers">
-              </div>
-            </section>`}
-          ${(point.destination) ? destinationDescriptionTemplate : ''}
-          ${(point.destination) ? picturesTemplate : ''}
+      offersTemplate : '<div class="event__available-offers"> </div>'}
+          ${(point.destination && description) ? destinationDescriptionTemplate : ''}
+          ${(point.destination && pointPictures) ? picturesTemplate : ''}
         </section>
       </form>
     </li>`
@@ -172,16 +162,19 @@ export default class PointEditView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleFormClose = null;
   #handleDeleteClick = null;
+  #pointComponent = null;
   #datepickerTo = null;
   #datepickerFrom = null;
 
-  constructor({ point, destinations, offers, onFormSubmit, onFormClose, onDeleteClick }) {
+  constructor({ point, destinations, offers, onFormSubmit, onFormClose, onDeleteClick, pointComponent }) {
     super();
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleFormClose = onFormClose;
     this.#handleDeleteClick = onDeleteClick;
+    this.#pointComponent = pointComponent;
+
     this._setState(PointEditView.parsePointToState(point));
     this._restoreHandlers();
   }
@@ -198,6 +191,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   removeElement = () => {
     super.removeElement();
+
     if (this.#datepickerFrom) {
       this.#datepickerFrom.destroy();
       this.#datepickerFrom = null;
@@ -209,7 +203,6 @@ export default class PointEditView extends AbstractStatefulView {
     }
   };
 
-  // ! Handlers
   _restoreHandlers = () => {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCloseHandler);
@@ -227,8 +220,12 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #formCloseHandler = (evt) => {
-    evt.preventDefault();
-    this.#handleFormClose(PointEditView.parseStateToPoint(this._state));
+    if (this.#pointComponent) {
+      evt.preventDefault();
+      this.#handleFormClose(PointEditView.parseStateToPoint(this._state));
+    } else {
+      this.#handleDeleteClick(PointEditView.parseStateToPoint(this._state));
+    }
   };
 
   #formDeleteClickHandler = (evt) => {
@@ -308,8 +305,8 @@ export default class PointEditView extends AbstractStatefulView {
       isSaving: false,
       isDeleting: false,
       basePrice: 0,
-      dateFrom: new Date(),
-      dateTo: new Date(),
+      dateFrom: null,
+      dateTo: null,
       destination: '',
       isFavorite: false,
       offers: [],
@@ -323,7 +320,6 @@ export default class PointEditView extends AbstractStatefulView {
     delete point.isDisabled;
     delete point.isSaving;
     delete point.isDeleting;
-
     return point;
   }
 }

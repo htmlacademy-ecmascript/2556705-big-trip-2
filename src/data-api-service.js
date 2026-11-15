@@ -1,11 +1,6 @@
+import { Method } from './const.js';
 import ApiService from './framework/api-service.js';
 
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  POST: 'POST',
-  DELETE: 'DELETE',
-};
 export default class DataApiService extends ApiService {
   get points() {
     return this._load({url: 'points'})
@@ -59,14 +54,12 @@ export default class DataApiService extends ApiService {
 
   #adaptToServer(point) {
     const adaptedPoint = {...point,
-      // На сервере дата хранится в ISO формате
       'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
       'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null,
       'base_price': Number(point.basePrice),
       'is_favorite': point.isFavorite,
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
     delete adaptedPoint.basePrice;

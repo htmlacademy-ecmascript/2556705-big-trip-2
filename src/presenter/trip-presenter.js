@@ -1,8 +1,8 @@
 import { render, RenderPosition, remove } from '../framework/render.js';
-import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
-import { sortPointDay, sortPointTime, sortPointPrice } from '../utils/utils.js';
-import {filter} from '../utils/filter.js';
+import { sortPointDay, sortPointTime, sortPointPrice} from '../utils/utils.js';
+import {Filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import NoPointView from '../view/no-point-view.js';
 import LoadingView from '../view/loading-view.js';
 import SortView from '../view/sort-view.js';
@@ -15,19 +15,19 @@ const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
 };
+
 export default class TripPresenter {
-  #pointsListComponent = new PointsListView();
-  #loadingComponent = new LoadingView();
-  #tripContainer = null;
-  #headerInfoContainer = null;
-  #sortComponent = null;
-  #noPointComponent = null;
   #pointsModel = null;
   #filterModel = null;
-  #pointPresenters = new Map();
+  #tripContainer = null;
+  #headerInfoContainer = null;
+  #loadingComponent = null;
+  #sortComponent = null;
+  #noPointComponent = null;
+  #pointsListComponent = new PointsListView();
   #newPointPresenter = null;
   #headerInfoPresenter = null;
-
+  #pointPresenters = new Map();
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
@@ -46,7 +46,8 @@ export default class TripPresenter {
       pointListContainer: this.#pointsListComponent.element,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy,
-      pointsModel: this.#pointsModel
+      pointsModel: this.#pointsModel,
+      renderRepeatNoPoints: this.#renderRepeatNoPoints.bind(this)
     });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
@@ -56,7 +57,7 @@ export default class TripPresenter {
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
+    const filteredPoints = Filter[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.DAY:
         return [...filteredPoints].sort(sortPointDay);
@@ -70,14 +71,21 @@ export default class TripPresenter {
   }
 
   init() {
+    remove(this.#noPointComponent);
+    this.#noPointComponent = null;
     this.#renderTrip();
   }
 
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init();
 
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+      this.#noPointComponent = null;
+    }
+
+    this.#newPointPresenter.init();
   }
 
   #handleModeChange = () => {
@@ -117,7 +125,6 @@ export default class TripPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    // В зависимости от типа изменений решаем, что делать:
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);
@@ -133,6 +140,10 @@ export default class TripPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
+        if (this.#pointsModel.hasServerError) {
+          this.#isLoading = true;
+        }
+
         this.#renderTrip();
         break;
     }
@@ -182,6 +193,7 @@ export default class TripPresenter {
   }
 
   #renderLoading() {
+    this.#loadingComponent = new LoadingView(this.#pointsModel);
     render(this.#loadingComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
   }
 
@@ -191,6 +203,12 @@ export default class TripPresenter {
     });
 
     render(this.#noPointComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderRepeatNoPoints() {
+    if (!this.points?.length) {
+      this.#renderNoPoints();
+    }
   }
 
   #clearTrip(resetSortType = false) {

@@ -1,6 +1,6 @@
-// Вставлять в .trip-events
-import AbstractView from '../framework/view/abstract-view.js';
 import {SortType} from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
+
 function createSortTemplate(currentSortType) {
   const sortTypes = Object.values(SortType).map((sortType) => sortType);
   return (

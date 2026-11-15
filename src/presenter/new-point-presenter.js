@@ -1,20 +1,21 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
-import PointEditView from '../view/point-edit-view.js';
 import {UserAction, UpdateType} from '../const.js';
+import PointEditView from '../view/point-edit-view.js';
 
 export default class NewPointPresenter {
+  #pointsModel = null;
   #pointListContainer = null;
+  #pointEditComponent = null;
   #handleDataChange = null;
   #handleDestroy = null;
-  #pointsModel = null;
+  #renderRepeatNoPoints = null;
 
-  #pointEditComponent = null;
-
-  constructor({pointListContainer, onDataChange, onDestroy, pointsModel}) {
+  constructor({pointListContainer, onDataChange, onDestroy, pointsModel, renderRepeatNoPoints}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
     this.#pointsModel = pointsModel;
+    this.#renderRepeatNoPoints = renderRepeatNoPoints;
   }
 
   init() {
@@ -40,7 +41,7 @@ export default class NewPointPresenter {
     }
 
     this.#handleDestroy();
-
+    this.#renderRepeatNoPoints();
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
 

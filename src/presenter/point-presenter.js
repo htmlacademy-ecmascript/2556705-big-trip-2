@@ -1,24 +1,20 @@
 import {render, replace, remove} from '../framework/render.js';
+import {UserAction, UpdateType, Mode} from '../const.js';
 import PointView from '../view/point-view.js';
 import PointEditView from '../view/point-edit-view.js';
-import {UserAction, UpdateType} from '../const.js';
 
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
 export default class PointPresenter {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+  #pointsModel = null;
   #pointsListContainer = null;
   #pointComponent = null;
   #pointEditComponent = null;
   #handleDataChange = null;
   #handleModeChange = null;
-
-  #pointsModel = null;
-  #point = null;
-  #destinations = null;
-  #offers = null;
   #mode = Mode.DEFAULT;
+
 
   constructor({pointsListContainer, pointsModel, onDataChange, onModeChange}) {
     this.#pointsListContainer = pointsListContainer;
@@ -40,7 +36,13 @@ export default class PointPresenter {
     );
 
     this.#pointEditComponent = new PointEditView({
-      point: this.#point, destinations: this.#destinations, offers: this.#offers, onFormSubmit: this.#handleFormSubmit, onFormClose: this.#handleFormClose, onDeleteClick: this.#handleDeleteClick
+      point: this.#point,
+      destinations: this.#destinations,
+      offers: this.#offers,
+      onFormSubmit: this.#handleFormSubmit,
+      onFormClose: this.#handleFormClose,
+      onDeleteClick: this.#handleDeleteClick,
+      pointComponent: this.#pointComponent,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -131,7 +133,6 @@ export default class PointPresenter {
   };
 
   #replaceCardToForm() {
-    // Делаем кнопку add new event заблокированной
     document.querySelector('.trip-main__event-add-btn').disabled = true;
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -143,7 +144,6 @@ export default class PointPresenter {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
-    // Делаем кнопку add new event разблокированной
     document.querySelector('.trip-main__event-add-btn').disabled = false;
   }
 
@@ -157,7 +157,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       update,
     );
-    // Делаем кнопку add new event разблокированной
     document.querySelector('.trip-main__event-add-btn').disabled = false;
   };
 
@@ -167,7 +166,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point,
     );
-    // Делаем кнопку add new event разблокированной
     document.querySelector('.trip-main__event-add-btn').disabled = false;
   };
 }
