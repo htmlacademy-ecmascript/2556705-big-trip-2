@@ -18,17 +18,17 @@ export default class HeaderInfoPresenter {
     this.#points = points;
     this.#destinations = this.#pointsModel.destinations;
     this.#offers = this.#pointsModel.offers;
-    const prevHeaderInfoComponent = this.#headerInfoComponent;
+    const previousHeaderInfoComponent = this.#headerInfoComponent;
 
     this.#headerInfoComponent = new HeaderInfoView(this.#points, this.#destinations, this.#offers);
 
-    if (prevHeaderInfoComponent === null) {
+    if (previousHeaderInfoComponent === null) {
       render(this.#headerInfoComponent, this.#headerInfoContainer, RenderPosition.AFTERBEGIN);
       return;
     }
 
-    replace(this.#headerInfoComponent, prevHeaderInfoComponent);
-    remove(prevHeaderInfoComponent);
+    replace(this.#headerInfoComponent, previousHeaderInfoComponent);
+    remove(previousHeaderInfoComponent);
   }
 
   destroy() {

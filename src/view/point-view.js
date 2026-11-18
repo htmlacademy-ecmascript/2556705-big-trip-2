@@ -4,9 +4,9 @@ import AbstractView from '../framework/view/abstract-view.js';
 
 const createPointTemplate = (point, destinations, offers) => {
   const { basePrice, isFavorite, dateFrom, dateTo, type } = point;
-  const typeOffers = offers.find((off) => off.type === point.type).offers;
+  const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const pointOffers = typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id));
-  const pointDestination = destinations.find((dest) => dest.id === point.destination);
+  const pointDestination = destinations.find((currentDestination) => currentDestination.id === point.destination);
   return (
     `<li class="trip-events__item">
       <div class="event">

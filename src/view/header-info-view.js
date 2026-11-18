@@ -5,7 +5,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 function createHeaderInfoTemplate(points, destinations, offers) {
   const totalPrice = getTotalTripPrice(points, offers);
   const totalPointDestinations = points.map((point) => point.destination);
-  const totalDestinations = totalPointDestinations.map((destination) => destinations?.find((dest) => dest.id === destination));
+  const totalDestinations = totalPointDestinations.map((destination) => destinations?.find((currentDestination) => currentDestination.id === destination));
   const totalNamesDestinations = totalDestinations.map((destination) => destination?.name);
   const overageDestinations = [];
   totalNamesDestinations.forEach((destination, i, array) => {

@@ -122,7 +122,7 @@ function createPointEditTemplate(point, destinations, offers) {
   const { dateFrom, dateTo, basePrice, type, isDisabled, isSaving, isDeleting } = point;
   const typeOffers = offers?.find((offer) => offer.type === point.type)?.offers;
   const pointOffers = (typeOffers) ? typeOffers.filter((typeOffer) => point.offers?.includes(typeOffer.id)) : '';
-  const pointDestination = destinations?.find((dest) => dest.id === point.destination) || '';
+  const pointDestination = destinations?.find((currentDestination) => currentDestination.id === point.destination) || '';
   const { name } = pointDestination || {};
   const { description } = pointDestination || '';
   const pointPictures = pointDestination?.pictures || '';

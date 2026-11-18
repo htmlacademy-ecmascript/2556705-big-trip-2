@@ -50,4 +50,3 @@ pointsModel.init()
   .finally(() => {
     render(newPointButtonComponent, headerInfoElement);
   });
-

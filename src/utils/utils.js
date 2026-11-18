@@ -44,19 +44,13 @@ function sortPointPrice(pointA, pointB) {
   return pointB.basePrice - pointA.basePrice;
 }
 
-function isOffersInPoint(point, offers) {
-  const typeOffers = offers?.find((offer) => offer.type === point.type).offers || 'taxi';
-  const pointOffers = typeOffers.filter((typeOffer) => point.offers.includes(typeOffer.id));
-  return pointOffers !== null;
-}
-
 function getTotalTripPrice (points, offers) {
-  const basePrice = points.map((point) => point.basePrice);
-  const totalBasePrice = basePrice.reduce((total, value) =>
+  const basePrices = points.map((point) => point.basePrice);
+  const totalBasePrice = basePrices.reduce((total, value) =>
     total + (Number(value) || 0), 0);
-  const bigArrayPointsOffers = points.map((point) => point.offers);
+  const manyPointsOffers = points.map((point) => point.offers);
   const totalOffers = [];
-  bigArrayPointsOffers.forEach((pointOffers) => {
+  manyPointsOffers.forEach((pointOffers) => {
     pointOffers.forEach((pointOffer) => totalOffers.push(pointOffer));
   });
   const offersInOffers = offers.map((currentOffer) => currentOffer.offers);
@@ -75,5 +69,5 @@ function getTotalTripPrice (points, offers) {
   return totalPrice;
 }
 
-export {upFirstLetter, formatOfferTitle, humanizePointDueDate, getDuration, sortPointDay, sortPointTime, sortPointPrice, isOffersInPoint, getTotalTripPrice };
+export {upFirstLetter, formatOfferTitle, humanizePointDueDate, getDuration, sortPointDay, sortPointTime, sortPointPrice, getTotalTripPrice };
 

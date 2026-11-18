@@ -213,9 +213,11 @@ export default class TripPresenter {
 
   #clearTrip(resetSortType = false) {
     this.#newPointPresenter.destroy();
-    if(this.#headerInfoPresenter) {
+
+    if (this.#headerInfoPresenter) {
       this.#headerInfoPresenter.destroy();
     }
+
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
     remove(this.#sortComponent);
